@@ -1,0 +1,3 @@
+-- The primary database is created automatically by the POSTGRES_DB env var
+-- (see docker-compose.yml). Add extra schema/extension/seed statements below.
+-- Each service still creates its own tables via Hibernate DDL.
