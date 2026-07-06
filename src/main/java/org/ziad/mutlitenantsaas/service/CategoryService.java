@@ -4,4 +4,5 @@ import org.ziad.mutlitenantsaas.dto.request.CategoryRequest;
 import org.ziad.mutlitenantsaas.dto.response.CategoryResponse;
 
 public interface CategoryService extends BasicService<CategoryRequest, CategoryResponse>{
+    Boolean existsById(String id);
 }

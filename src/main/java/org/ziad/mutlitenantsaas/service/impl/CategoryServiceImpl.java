@@ -15,7 +15,6 @@ import org.ziad.mutlitenantsaas.mapper.CategoryMapper;
 import org.ziad.mutlitenantsaas.repositories.CategoryRepository;
 import org.ziad.mutlitenantsaas.service.CategoryService;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -85,14 +84,6 @@ public class CategoryServiceImpl implements CategoryService {
                 .map(categoryMapper::toResponse);
     }
 
-    @Override
-    public List<CategoryResponse> findAll() {
-        return categoryRepository.findAll()
-                .stream()
-                .map(categoryMapper::toResponse)
-                .toList();
-    }
-
     private void checkIfCategoryExistsByName(String name) {
 
         final Optional<Category> category = categoryRepository.findByNameIgnoreCase(name);
@@ -101,5 +92,10 @@ public class CategoryServiceImpl implements CategoryService {
             log.debug("Category with name {} already exists", name);
             throw new AlreadyExistsException("Category with name " + name + " already exists");
         }
+    }
+
+    @Override
+    public Boolean existsById(String id) {
+        return categoryRepository.existsById(id);
     }
 }

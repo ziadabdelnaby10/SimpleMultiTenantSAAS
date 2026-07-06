@@ -11,8 +11,6 @@ import org.ziad.mutlitenantsaas.dto.request.CategoryRequest;
 import org.ziad.mutlitenantsaas.dto.response.CategoryResponse;
 import org.ziad.mutlitenantsaas.service.CategoryService;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("v1/categories")
 @RequiredArgsConstructor
@@ -31,11 +29,6 @@ public class CategoryController {
         return ResponseEntity.ok(categories);
     }
 
-//    @GetMapping
-//    public ResponseEntity<List<CategoryResponse>> getCategories() {
-//        List<CategoryResponse> categories = categoryService.findAll();
-//        return ResponseEntity.ok(categories);
-//    }
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateCategory(@PathVariable String id, @Valid @RequestBody CategoryRequest categoryRequest) {
