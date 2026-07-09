@@ -72,6 +72,11 @@ public class StockMovementServiceImpl implements StockMovementService {
         return stockMovementRepository.findAll(pageable).map(stockMovementMapper::toResponse);
     }
 
+    @Override
+    public Page<StockMovementResponse> findAllByProductId(String productId, Pageable pageable) {
+        return stockMovementRepository.findAllByProduct_Id(productId, pageable).map(stockMovementMapper::toResponse);
+    }
+
     private void checkIfProductExistsById(final String productId) {
         if (productService.existsById(productId)) {
             throw new EntityNotFoundException("Product does not exist");

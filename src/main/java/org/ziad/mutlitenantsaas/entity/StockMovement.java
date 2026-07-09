@@ -20,17 +20,17 @@ import static jakarta.persistence.EnumType.STRING;
 @NoArgsConstructor
 @SuperBuilder
 @Entity
-@Table(name = "stock_movements")
+@Table(name = "stock_mvts")
 public class StockMovement extends AbstractEntity {
 
-    @Column(name = "type_movement", nullable = false)
+    @Column(name = "type_mvt", nullable = false)
     @Enumerated(STRING)
     private TypeMovement typeMovement;
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
-    @Column(name = "date_movement", nullable = false)
+    @Column(name = "date_mvt", nullable = false)
     private Instant dateMovement;
 
     @Column(name = "comment", columnDefinition = "TEXT")

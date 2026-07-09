@@ -1,16 +1,14 @@
-package org.ziad.mutlitenantsaas.security.filter;
+package org.ziad.mutlitenantsaas.aspect;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.hibernate.Session;
-import org.springframework.stereotype.Component;
 import org.ziad.mutlitenantsaas.config.TenantContext;
 
-@Aspect
-@Component
-public class TenantHibernateFilter {
+//@Aspect
+//@Component
+public class TenantHibernateAspect {
 
     @PersistenceContext
     private EntityManager entityManager;
