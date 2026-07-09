@@ -4,22 +4,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
 import org.ziad.mutlitenantsaas.config.TenantContext;
 import org.ziad.mutlitenantsaas.exception.MissingTenantHeaderException;
 import org.ziad.mutlitenantsaas.util.Constants;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
-@Order(Ordered.HIGHEST_PRECEDENCE)
+//@Component
+//@Order(Ordered.HIGHEST_PRECEDENCE)
 public class TenantFilter implements Filter {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -38,7 +34,7 @@ public class TenantFilter implements Filter {
         } catch (MissingTenantHeaderException ex) {
             handleMissingTenantException(response, ex);
         } finally {
-            TenantContext.clearCurrentTenant();
+            TenantContext.clear();
         }
     }
 

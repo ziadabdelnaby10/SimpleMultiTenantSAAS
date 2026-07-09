@@ -1,11 +1,11 @@
 package org.ziad.mutlitenantsaas.mapper;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.ziad.mutlitenantsaas.dto.request.CategoryRequest;
 import org.ziad.mutlitenantsaas.dto.response.CategoryResponse;
 import org.ziad.mutlitenantsaas.entity.Category;
 
-@Service
+@Component
 public class CategoryMapper {
 
     public Category toEntity(final CategoryRequest categoryRequest) {
