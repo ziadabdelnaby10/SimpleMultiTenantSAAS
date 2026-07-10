@@ -15,6 +15,32 @@ services:
         - saas-app-container-network
     restart: unless-stopped
 
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: saas-app-container
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-saas-app-db}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      DB_SCHEMA: ${DB_SCHEMA:-public}
+      SERVER_PORT: ${SERVER_PORT:-8080}
+      SERVER_CONTEXT_PATH: ${SERVER_CONTEXT_PATH:-/api}
+      JWT_PRIVATE_KEY_PATH: ${JWT_PRIVATE_KEY_PATH:-certs/private_key.pem}
+      JWT_PUBLIC_KEY_PATH: ${JWT_PUBLIC_KEY_PATH:-certs/public_key.pem}
+      JWT_ACCESS_TOKEN_EXPIRATION: ${JWT_ACCESS_TOKEN_EXPIRATION:-86400000}
+    ports:
+      - "${SERVER_PORT:-8080}:8080"
+    depends_on:
+      - postgres
+    networks:
+      - saas-app-container-network
+    restart: unless-stopped
+
 volumes:
   postgres_data:
     driver: local

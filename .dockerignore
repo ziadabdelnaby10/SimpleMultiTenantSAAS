@@ -1,0 +1,9 @@
+target
+.idea
+.git
+.gitignore
+README.md
+Swagger UI.pdf
+docs/*.pdf
+**/*.log
+

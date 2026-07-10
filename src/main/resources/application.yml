@@ -53,7 +53,12 @@ app:
 
 springdoc:
   default-produces-media-type: application/json
+  api-docs:
+    path: /v3/api-docs
   swagger-ui:
     enabled: true
-    operations-sorter: true
+    path: /swagger-ui.html
+    operations-sorter: method
     tags-sorter: alpha
+    try-it-out-enabled: true
+    display-request-duration: true

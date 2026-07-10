@@ -19,7 +19,7 @@ create table tenants
     status          varchar(255) not null
         constraint tenants_status_check
             check ((status)::text = ANY
-        ((ARRAY ['PENDING'::character varying, 'ACTIVE'::character varying, 'SUSPENDED'::character varying, 'INACTIVE'::character varying])::text[]))
+                   ((ARRAY ['PENDING'::character varying, 'ACTIVE'::character varying, 'SUSPENDED'::character varying, 'INACTIVE'::character varying])::text[]))
 );
 
 create table users
@@ -39,7 +39,7 @@ create table users
     role       varchar(255) not null
         constraint users_role_check
             check ((role)::text = ANY
-        ((ARRAY ['ROLE_PLATFORM_ADMIN'::character varying, 'ROLE_COMPANY_ADMIN'::character varying, 'ROLE_ADMINISTRATOR'::character varying, 'ROLE_USER'::character varying, 'ROLE_SALES_OPERATOR'::character varying])::text[])),
+                   ((ARRAY ['ROLE_PLATFORM_ADMIN'::character varying, 'ROLE_COMPANY_ADMIN'::character varying, 'ROLE_ADMINISTRATOR'::character varying, 'ROLE_USER'::character varying, 'ROLE_SALES_OPERATOR'::character varying])::text[])),
     tenant_id  varchar(255)
         constraint fk_user_tenant_id
             references tenants,
@@ -47,3 +47,9 @@ create table users
     username   varchar(255) not null
         unique
 );
+
+insert into users (deleted, enabled, created_at, updated_at, created_by, email, first_name, id, last_name, password,
+                   role, tenant_id, updated_by, username)
+values (false, true, now(), null, 'SYSTEM', 'saas@gmail.com', 'admin', gen_random_uuid(), 'admin',
+        '$2a$10$AG747E8yW6Kufaj8Q5u9rulO7SJlKgmloC/pcs6YFDgMsTW5g8NFG', 'ROLE_PLATFORM_ADMIN', null, null,
+        'john.admin');

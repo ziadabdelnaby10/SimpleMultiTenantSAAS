@@ -1,5 +1,6 @@
 package org.ziad.mutlitenantsaas.aspect;
 
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -8,8 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.ziad.mutlitenantsaas.exception.MissingTenantHeaderException;
 
@@ -42,6 +41,36 @@ public class GlobalExceptionHandler {
                         error -> error.getDefaultMessage() != null ? error.getDefaultMessage() : "Invalid value"
                 )));
         
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Handle constraint violations from path variables and request params (e.g., @NotBlank on @PathVariable)
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Map<String, Object>> handleConstraintViolation(ConstraintViolationException ex) {
+        log.warn("Constraint violation occurred: {}", ex.getMessage());
+
+        Map<String, String> errors = ex.getConstraintViolations()
+                .stream()
+                .collect(Collectors.toMap(
+                        violation -> {
+                            String path = violation.getPropertyPath().toString();
+                            // Extract the last segment (method parameter name)
+                            int dot = path.lastIndexOf('.');
+                            return dot >= 0 ? path.substring(dot + 1) : path;
+                        },
+                        violation -> violation.getMessage() != null ? violation.getMessage() : "Invalid value",
+                        (existing, replacement) -> existing
+                ));
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        body.put("error", "Validation Failed");
+        body.put("message", "Request parameter validation failed");
+        body.put("errors", errors);
+
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 

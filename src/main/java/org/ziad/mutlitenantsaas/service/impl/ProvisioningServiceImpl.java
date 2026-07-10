@@ -11,6 +11,20 @@ import org.ziad.mutlitenantsaas.service.ProvisioningService;
 
 import javax.sql.DataSource;
 
+/**
+ * Provisions a new tenant's PostgreSQL schema using Flyway migrations.
+ *
+ * <p>Provisioning sequence:
+ * <ol>
+ *   <li>Create the schema ({@code tenant_<companyCode>}) if it doesn't already exist.</li>
+ *   <li>Run the tenant-specific Flyway migrations from {@code classpath:db/migration/tenant}
+ *       against the new schema.</li>
+ *   <li>Initialise default data (currently a no-op; reserved for future use).</li>
+ * </ol>
+ *
+ * <p>If any step fails the partially created schema is dropped and a
+ * {@link org.ziad.mutlitenantsaas.exception.TenantProvisionException} is thrown.
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -19,6 +33,16 @@ public class ProvisioningServiceImpl implements ProvisioningService {
     private final JdbcTemplate jdbcTemplate;
     private final DataSource dataSource;
 
+    /**
+     * {@inheritDoc}
+     *
+     * <p>Derives the schema name as {@code tenant_<companyCode>} (lower-cased).
+     * Rolls back (drops) the schema on failure before rethrowing.
+     *
+     * @param tenant the newly approved tenant to provision
+     * @throws org.ziad.mutlitenantsaas.exception.TenantProvisionException if
+     *         schema creation or Flyway migration fails
+     */
     @Override
     public void provision(Tenant tenant) {
         final String schemaName = "tenant_" + tenant.getCompanyCode().toLowerCase();

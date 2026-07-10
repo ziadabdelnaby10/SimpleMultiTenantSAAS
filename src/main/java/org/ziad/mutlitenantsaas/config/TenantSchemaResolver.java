@@ -6,6 +6,17 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+/**
+ * Resolves the PostgreSQL schema name for a given tenant ID.
+ *
+ * <p>Looks up the {@code company_code} column of the {@code public.tenants} table
+ * and converts it to the schema name pattern {@code tenant_<companyCode>} (lower-cased).
+ * Falls back to the {@code public} schema if the tenant is not found or an error occurs.
+ *
+ * <p>Results are cached under the {@code "tenantSchemas"} cache (configured in
+ * {@link CacheConfig}) keyed by {@code tenantId}, so repeated calls within the same
+ * JVM process do not hit the database.
+ */
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -15,6 +26,19 @@ public class TenantSchemaResolver {
 
     private static final String PUBLIC_SCHEMA = "public";
 
+    /**
+     * Returns the PostgreSQL schema name for the given tenant, caching the result.
+     *
+     * <p>Returns {@code "public"} in the following cases:
+     * <ul>
+     *   <li>{@code tenantId} is {@code null}</li>
+     *   <li>no active tenant row is found for {@code tenantId}</li>
+     *   <li>a database or runtime error occurs</li>
+     * </ul>
+     *
+     * @param tenantId the UUID of the tenant whose schema should be resolved
+     * @return the schema name (e.g. {@code "tenant_acme-corp"}) or {@code "public"}
+     */
     @Cacheable(value = "tenantSchemas", key = "#tenantId")
     public String resolveTenantSchema(final String tenantId) {
         if (tenantId == null) {
