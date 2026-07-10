@@ -3,7 +3,7 @@ target
 .git
 .gitignore
 README.md
-Swagger UI.pdf
+docs/Swagger UI.pdf
 docs/*.pdf
 **/*.log
 
