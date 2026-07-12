@@ -1,0 +1,15 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+  flyway:
+    enabled: false
+  datasource:
+    url: jdbc:postgresql://localhost:5432/test
+    username: test
+    password: test
+app:
+  jwt:
+    private-key-path: certs/private_key.pem
+    public-key-path: certs/public_key.pem
+

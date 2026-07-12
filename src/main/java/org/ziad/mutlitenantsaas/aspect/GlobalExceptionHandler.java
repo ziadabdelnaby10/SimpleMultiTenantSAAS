@@ -13,6 +13,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.ziad.mutlitenantsaas.exception.MissingTenantHeaderException;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -38,7 +39,11 @@ public class GlobalExceptionHandler {
                 .stream()
                 .collect(Collectors.toMap(
                         org.springframework.validation.FieldError::getField,
-                        error -> error.getDefaultMessage() != null ? error.getDefaultMessage() : "Invalid value"
+                        error -> error.getDefaultMessage() != null ? error.getDefaultMessage() : "Invalid value",
+                        (existing, replacement) -> existing.equals(replacement)
+                                ? existing
+                                : existing + "; " + replacement,
+                        LinkedHashMap::new
                 )));
         
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
